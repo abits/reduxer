@@ -1,7 +1,7 @@
 import * as React from "react";
 import { render } from "react-dom";
 import { createStore } from "redux";
-import { useDispatch, Provider } from "react-redux";
+import { useDispatch, useSelector, Provider } from "react-redux";
 
 import "./styles.css";
 
@@ -23,7 +23,6 @@ store.subscribe(() => console.log(store.getState()));
 
 type DotProps = {
   color: string;
-  count: number;
 };
 
 const IncrementerButton = () => {
@@ -46,7 +45,10 @@ const DecrementButton = () => {
   );
 };
 
-const RedDot = ({ color }: DotProps) => (
+const RedDot = ({ color }: DotProps) => {
+  const counter = useSelector(state => state)
+
+  return (
   <svg width="280" height="280">
     <g>
       <ellipse
@@ -60,17 +62,17 @@ const RedDot = ({ color }: DotProps) => (
         fill={color}
       />
       <text x="25" y="36" fill="#DDD">
-        P
+        { counter }
       </text>
     </g>
   </svg>
-);
+)};
 
 function App() {
   return (
     <div className="App">
       <h1>Reduxer Playground</h1>
-      <h2>Managing state on so many different levels</h2>
+      <h2>Such state, much redux</h2>
       <RedDot color="#FF0000" />
       <RedDot color="#0000FF" />
       <DecrementButton />
