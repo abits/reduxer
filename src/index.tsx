@@ -1,10 +1,11 @@
 import * as React from "react";
 import { render } from "react-dom";
 import { createStore } from "redux";
+import { useDispatch, Provider } from "react-redux";
 
 import "./styles.css";
 
-function counter(state = 0, action: { type: any; }) {
+function counter(state = 0, action: { type: any }) {
   switch (action.type) {
     case "INCREMENT":
       state = state + 1;
@@ -19,34 +20,69 @@ function counter(state = 0, action: { type: any; }) {
 
 let store = createStore(counter);
 store.subscribe(() => console.log(store.getState()));
-store.dispatch({ type: "INCREMENT " });
-store.dispatch({ type: "INCREMENT" });
-store.dispatch({ type: "INCREMENT" });
-store.dispatch({ type: "DECREMENT" });
-store.dispatch({ type: "INCREMENT" });
-
 
 type DotProps = {
-  color: "#FF0000"
-}
+  color: string;
+  count: number;
+};
 
-const RedDot = () => 
-  <svg width="640" height="480">
-  <g>
-    <ellipse ry="25" rx="25" id="svg_2" cy="132" cx="136" stroke-width="5" stroke="#000000" fill={ `DotProps.color` }/>
-  </g>
-</svg> 
+const IncrementerButton = () => {
+  const dispatch = useDispatch();
 
+  return (
+    <button name="button" onClick={() => dispatch({ type: "INCREMENT" })}>
+      Add +1
+    </button>
+  );
+};
+
+const DecrementButton = () => {
+  const dispatch = useDispatch();
+
+  return (
+    <button name="button" onClick={() => dispatch({ type: "DECREMENT" })}>
+      Sub -1
+    </button>
+  );
+};
+
+const RedDot = ({ color }: DotProps) => (
+  <svg width="280" height="280">
+    <g>
+      <ellipse
+        ry="20"
+        rx="20"
+        id="dot"
+        cy="30"
+        cx="30"
+        strokeWidth="5"
+        stroke="#000000"
+        fill={color}
+      />
+      <text x="25" y="36" fill="#DDD">
+        P
+      </text>
+    </g>
+  </svg>
+);
 
 function App() {
   return (
     <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some happen!</h2>
-        <RedDot></RedDot>
+      <h1>Reduxer Playground</h1>
+      <h2>Managing state on so many different levels</h2>
+      <RedDot color="#FF0000" />
+      <RedDot color="#0000FF" />
+      <DecrementButton />
+      <IncrementerButton />
     </div>
   );
 }
 
 const rootElement = document.getElementById("root");
-render(<App />, rootElement);
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  rootElement
+);
